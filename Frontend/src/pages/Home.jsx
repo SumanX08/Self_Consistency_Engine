@@ -16,7 +16,7 @@ export default function Home() {
 
   useEffect(() => {
   const eventSource = new EventSource(
-  `http://localhost:3000/api/generate/stream?clientId=${clientId.current}`
+  `https://self-consistency-engine-ac96.onrender.com/api/generate/stream?clientId=${clientId.current}`
 );
 
 eventSource.onmessage = (event) => {
@@ -87,7 +87,7 @@ eventSource.onmessage = (event) => {
   ]);
 
   try {
-    await axios.post("http://localhost:3000/api/generate", {
+    await axios.post("https://self-consistency-engine-ac96.onrender.com/api/generate", {
       question: prompt,
       clientId: clientId.current,
     });
