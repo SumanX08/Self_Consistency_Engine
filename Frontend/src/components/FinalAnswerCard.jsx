@@ -1,5 +1,8 @@
 import { Copy, Sparkles, Check } from "lucide-react";
 import { useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
 
 const FinalAnswerCard = ({ finalAnswer }) => {
   const [copied, setCopied] = useState(false);
@@ -86,12 +89,17 @@ const FinalAnswerCard = ({ finalAnswer }) => {
 
         {/* Answer */}
         <div className="px-6 py-6 border-b border-white/10">
-          <p className="whitespace-pre-wrap leading-8 text-zinc-300">
-            {finalAnswer.finalAnswer}
-          </p>
+          <div className=" max-w-none prose prose-invert text-white">
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              rehypePlugins={[rehypeHighlight]}
+            >
+              {finalAnswer.finalAnswer}
+            </ReactMarkdown>
+          </div>
         </div>
         <div className="px-6 py-6 border-b border-white/10">
-        <h1 className="text-zinc-500 text-lg">REASON</h1>
+          <h1 className="text-zinc-500 text-lg">REASON</h1>
           <p className="whitespace-pre-wrap leading-8 text-zinc-300">
             {finalAnswer.reason}
           </p>

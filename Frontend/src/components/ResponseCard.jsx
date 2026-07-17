@@ -1,6 +1,10 @@
 import { useState } from "react";
-import {ChevronDown,ChevronUp,Copy,Clock3,FileText,} from "lucide-react";
+import { ChevronDown, ChevronUp, Copy, Clock3, FileText, } from "lucide-react";
 import ProviderIcon from "./ProviderIcon";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
+import { AnimatePresence, motion } from "framer-motion";
 
 const ResponseCard = ({
   provider,
@@ -12,21 +16,21 @@ const ResponseCard = ({
 }) => {
   const [expanded, setExpanded] = useState(false);
 
-  console.log(response)
+ 
 
   if (response.loading) {
-  return (
-    <div className="rounded-2xl border border-white/10 bg-[#111113] p-6">
-      <h2 className="text-lg font-semibold text-white">
-        {response.provider}
-      </h2>
+    return (
+      <div className="rounded-2xl border border-white/10 bg-[#111113] p-6">
+        <h2 className="text-lg font-semibold text-white">
+          {response.provider}
+        </h2>
 
-      <p className="mt-4 text-zinc-400 animate-pulse">
-        ⏳ Generating response...
-      </p>
-    </div>
-  );
-}
+        <p className="mt-4 text-zinc-400 animate-pulse">
+          ⏳ Generating response...
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="rounded-2xl border border-white/10 bg-[#111113] overflow-hidden">
@@ -34,7 +38,7 @@ const ResponseCard = ({
       <div className="flex items-center justify-between px-6 py-5">
         <div className="flex items-center gap-4">
           <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-zinc-900 border border-white/10">
-              <ProviderIcon provider={response.provider} />
+            <ProviderIcon provider={response.provider} />
 
           </div>
 
@@ -78,15 +82,28 @@ const ResponseCard = ({
 
       {/* Expandable Body */}
 
-      <div
-        className={`transition-all duration-300 ${
-          expanded ? "max-h-175" : "max-h-0"
-        } overflow-hidden`}
-      >
-        <div className="border-t border-white/10 px-6 py-6 text-zinc-300 whitespace-pre-wrap leading-8">
-          {response.answer}
+      <AnimatePresence initial={false}>
+  {expanded && (
+    <motion.div
+      initial={{ height: 0, opacity: 0 }}
+      animate={{ height: "auto", opacity: 1 }}
+      exit={{ height: 0, opacity: 0 }}
+      transition={{ duration: 0.25, ease: "easeInOut" }}
+      className="overflow-hidden"
+    >
+      <div className="border-t border-white/10 px-6 py-6">
+        <div className="prose prose-invert max-w-none text-white">
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            rehypePlugins={[rehypeHighlight]}
+          >
+            {response.answer}
+          </ReactMarkdown>
         </div>
       </div>
+    </motion.div>
+  )}
+</AnimatePresence>
     </div>
   );
 };

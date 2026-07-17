@@ -1,9 +1,12 @@
 import { orchestrate } from "../orchestrator.js";
 import { sendEvent } from "../utils/sseManager.js";
+import { config } from "../config/config.js";
 
 export async function generateAnswer(req, res) {
   try {
     const { question, clientId } = req.body;
+    console.log("OpenAI Key:", config.openai.apiKey?.slice(0, 10));
+console.log("Gemini Key:", config.gemini.apiKey?.slice(0, 10));
 
     if (!question?.trim()) {
       return res.status(400).json({
@@ -60,6 +63,8 @@ export async function generateAnswer(req, res) {
       data: result,
     });
   } catch (error) {
+    console.error("Generate Error:");
+  console.error(error);
     return res.status(500).json({
       success: false,
       message: error.message,
